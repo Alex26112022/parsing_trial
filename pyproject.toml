@@ -2,19 +2,21 @@
 name = "parsing-trial"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Алексей Денисенко <elvis.presly.039127@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+fake-headers = "^1.0.2"
+selenium = "^4.22.0"
+tqdm = "^4.66.4"
+loguru = "^0.7.2"
+
+
+[tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
 pytest-cov = "^5.0.0"
-requests = "^2.32.3"
-bs4 = "^0.0.2"
-lxml = "^5.2.2"
-fake-useragent = "^1.5.1"
 flake8 = "^7.1.0"
-
 
 [build-system]
 requires = ["poetry-core"]
