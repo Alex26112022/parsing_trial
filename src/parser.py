@@ -1,19 +1,23 @@
+from datetime import datetime
 from time import sleep
 
 from fake_headers import Headers
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from tqdm import tqdm
 
+from config import path_logger
 from src.trial_object import Trial
 
 
 class Parser:
     """ Класс-парсер сайта. """
 
-    def __init__(self, url: str, date_trial: str):
+    def __init__(self, url: str, date_trial: str, search_text: str):
         self.__URL = url
         self.date_trial = date_trial
         self.trial_list = []
+        self.search_text = search_text
 
         headers = Headers(os="win", headers=True).generate()['User-Agent']
         options = webdriver.ChromeOptions()
@@ -21,11 +25,14 @@ class Parser:
         options.add_argument(f'user-agent={headers}')
         # Отключение режима драйвера.
         options.add_argument('--disable-blink-features=AutomationControlled')
+        # Работа в фоновом режиме.
+        options.add_argument('headless')
 
         # Инициализация драйвера Chrome.
         self.driver = webdriver.Chrome(options=options)
+        self.driver.set_window_size(1920, 1080)
 
-        self.search_text = 'Иски о взыскании сумм по договору займа, кредитному договору'
+        self.search_text = 'Иски о взыскании сумм по договору займа, кредитному договору'  # noqa
 
     def load_info(self):
         """ Загружает информацию. """
@@ -33,7 +40,7 @@ class Parser:
             self.driver.get(url=self.__URL + self.date_trial)
             sleep(10)
             trials = self.driver.find_elements(By.XPATH, '//tr[@valign="top"]')
-            for trial in trials:
+            for trial in tqdm(trials):
 
                 full_info = trial.find_elements(By.TAG_NAME, 'td')
 
@@ -52,6 +59,8 @@ class Parser:
                           respondent, resolution))
 
         except Exception as e:
+            with open(path_logger, 'a', encoding='utf-8') as file_log:
+                file_log.write(f'{datetime.now()}\nError: {e}')
             print(e)
         finally:
             self.driver.close()
