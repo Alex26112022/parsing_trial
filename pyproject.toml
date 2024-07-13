@@ -2,7 +2,7 @@
 name = "parsing-trial"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Алексей Денисенко <elvis.presly.039127@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
